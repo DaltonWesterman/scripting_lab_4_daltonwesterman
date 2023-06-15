@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "Log_analysis_lib.py",
-            "console": "integratedTerminal",
+            "console": "externalTerminal",
             "justMyCode": true,
             "args": ["gateway.log"]
         },
@@ -18,7 +18,7 @@
             "type": "python",
             "request": "launch",
             "program": "Log_investigation.py",
-            "console": "integratedTerminal",
+            "console": "externalTerminal",
             "justMyCode": true,
             "args": ["gateway.log"]
         }

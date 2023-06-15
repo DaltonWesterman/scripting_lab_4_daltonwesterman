@@ -10,17 +10,15 @@ def main():
     # Get the log file path from the command line
     log_path = get_file_path_from_cmd_line()
 
-    # TODO: Use filter_log_by_regex() to investigate the gateway log per Step 5
-    records, captures = filter_log_by_regex(log_path, r'sshd', print_summary=True, print_records=True)
+    #Use filter_log_by_regex() to investigate the gateway log per Step 5
+    records, captures = filter_log_by_regex(log_path, r'invalid user', print_summary=True, print_records=True)
 
 
-    # TODO: Use filter_log_by_regex() to extract data from the gateway log per Step 6
+    #Use filter_log_by_regex() to extract data from the gateway log per Step 6
     captures = filter_log_by_regex(log_path, r'SRC=(.*?) DST(.*?) LEN(.*?) ')[1]
     df = pd.DataFrame(captures)
-    df.to_csv(captures.csv, index=False, header=('Source IP', 'Destination IP', 'Length'))
-
-
-
+    df.to_csv('captures.csv', index=False, header=('Source IP', 'Destination IP', 'Length'))
+    
     return
 
 def get_file_path_from_cmd_line(param_num=1):
@@ -35,7 +33,7 @@ def get_file_path_from_cmd_line(param_num=1):
     Returns:
         str: File path
     """
-    # TODO: Implement the function body per Step 3
+    #Implement the function body per Step 3
     num_params = len(sys.argv) -1
     if num_params < param_num:
         print("Error: File path not provided")
@@ -43,7 +41,7 @@ def get_file_path_from_cmd_line(param_num=1):
 
 
     #get the file path and convert it to an absolute path
-    file_path = os.abspath(sys.argv[param_num])
+    file_path = os.path.abspath(sys.argv[param_num])
 
 
     #check whether file exists

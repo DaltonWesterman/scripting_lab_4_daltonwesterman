@@ -10,6 +10,7 @@ Parameters:
 """
 import log_analysis_lib
 import pandas as pd
+import re
 
 # Get the log file path from the command line
 # Because this is outside of any function, log_path is a global variable
@@ -42,7 +43,7 @@ def tally_port_traffic():
     dpt_tally = {}
 
     for dpt in dpt_logs:
-        dpt_tally[dpt[0]] = dpt_tally.get(dpt[0], 0) +1
+        dpt_tally[dpt[0]] = dpt_tally.get(dpt[0], 0) + 1
 
     return dpt_tally
 
@@ -53,7 +54,7 @@ def generate_port_traffic_report(port_number):
     Args:
         port_number (str or int): Destination port number
     """
-    log_analysis_lib.filter_log_by_regex(log_path, r'[1]
+    data = log_analysis_lib.filter_log_by_regex(log_path, r'^(.+ \d+) (.{8}).*SRC=(.*?) DST=(.*?) .*SPT(.*?) DPT=(.*?) ')[1]
 
     # Get data from records that contain the specified destination port
     # Generate the CSV report
@@ -64,13 +65,22 @@ def generate_port_traffic_report(port_number):
 
     return
 
-def generate_invalid_user_report():
+def generate_invalid_user_report(invalid_users):
     """Produces a CSV report of all network traffic in a log file that show
     an attempt to login as an invalid user.
     """
-    # TODO: Complete function body per step 9
-    # Get data from records that show attempted invalid user login
-    # Generate the CSV report
+    #Complete function body per step 9
+    log_path = log_analysis_lib.get_file_path_from_cmd_line()
+    
+    data = log_analysis_lib.filter_log_by_regex(log_path, r'^(.+ \d+) (.{8}). ([A-Za-z]+) ')[1]
+    #for refrences citation, the regex was found and modified on stack overflow as you suggested to use previously
+
+    #Generate the CSV report
+    df = pd.DataFrame(data)
+    csv_filename = f"invalid_users_report{invalid_users}_invalid_users.csv"
+    headings = ('Date', 'Time', 'Username', 'IP Address')
+    df.to_csv(csv_filename, index=False, header=headings)
+    
     return
 
 def generate_source_ip_log(ip_address):
@@ -80,9 +90,20 @@ def generate_source_ip_log(ip_address):
     Args:
         ip_address (str): Source IP address
     """
-    # TODO: Complete function body per step 10
+    # Complete function body per step 10
+    log_path = log_analysis_lib.get_file_path_from_cmd_line()
+    
     # Get all records that have the specified sourec IP address
+    data = log_analysis_lib.filter_log_by_regex(log_path, r'SRC=(.*?)' + re.escape(ip_address))[0]
+
     # Save all records to a plain text .log file
+    df = pd.DataFrame(data)
+    
+    re.sub("_"'f{ip_address}')
+    csv_filename = f'source_ip_{ip_address}.log'
+    df.to_csv(csv_filename, index = None, header = None)
+
+
     return
 
 if __name__ == '__main__':
